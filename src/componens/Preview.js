@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {formatBytes, getDimensions, getMegapixel} from "../helpers/utils";
+import {formatBytes, getDimensions, getImageType, getMegapixel} from "../helpers/utils";
 import {downloadFile} from "../api";
 
 const Preview = ({imageFile, fileId, onDelete}) => {
@@ -14,7 +14,7 @@ const Preview = ({imageFile, fileId, onDelete}) => {
             img.onload = function () {
                 setImageInfo({
                     name: imageFile.name,
-                    type: imageFile.type,
+                    type: getImageType(imageFile.type),
                     size: formatBytes(imageFile.size),
                     dimensions: getDimensions(this.height, this.width),
                     megapixel: getMegapixel(this.height, this.width),

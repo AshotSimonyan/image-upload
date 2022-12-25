@@ -14,6 +14,9 @@ export const formatBytes = (bytes, decimals = 2) => {
 export const getDimensions = (height, width) => {
     return `${height} x ${width}`
 }
+export const getImageType = (type) => {
+    return type.split('/')[1]
+}
 
 export const getMegapixel = (height, width) => {
     return `${((height * width) / 1000000).toFixed(2)} MP`
