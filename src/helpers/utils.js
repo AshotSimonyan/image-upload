@@ -18,3 +18,8 @@ export const getDimensions = (height, width) => {
 export const getMegapixel = (height, width) => {
     return `${((height * width) / 1000000).toFixed(2)} MP`
 }
+
+export const validateFile = (file, mimeTypes) => {
+    return !!file.type.match(mimeTypes);
+};
+

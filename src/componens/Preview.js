@@ -1,54 +1,87 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {formatBytes, getDimensions, getMegapixel} from "../helpers/utils";
+import {downloadFile} from "../api";
 
-const Preview = ({image, setImage}) => {
+const Preview = ({imageFile, fileId, onDelete}) => {
+    const [imageInfo, setImageInfo] = useState({});
 
-    const handleDelete = () => {
-        setImage({})
+    useEffect(() => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const {result} = e.target;
+            const img = new Image();
+            img.src = result;
+            img.onload = function () {
+                setImageInfo({
+                    name: imageFile.name,
+                    type: imageFile.type,
+                    size: formatBytes(imageFile.size),
+                    dimensions: getDimensions(this.height, this.width),
+                    megapixel: getMegapixel(this.height, this.width),
+                    src: result
+                });
+            }
+        };
+        reader.readAsDataURL(imageFile);
+    }, [imageFile]);
+
+    const {name, type, size, dimensions, megapixel, src} = imageInfo;
+    const handleDownload = async () => {
+        const blob = await downloadFile(imageFile.name, fileId);
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = name;
+        a.click();
     }
+
     return (
         <div className='preview'>
-            <div className="preview-left">
-                <a className='preview-img-wrapper' href={image.src} download={image.name}>
-                    <img className='preview-img' src={image.src} alt={image.name}/>
-                    <span className="placeholder">
-                        <img src="icons/download-placeholder.svg" alt=""/>
-                    </span>
-                </a>
-            </div>
-            <div className="preview-right">
-                <div className='preview-data'>
-                    <div className='image-desc'>
-                        <h5 className='title'>Image Name</h5>
-                        <p className='truncate'>{image.name}</p>
-                    </div>
-                    <div className='image-desc'>
-                        <h5 className='title'>Image Type</h5>
-                        <p>{image.type}</p>
-                    </div>
-                    <div className='image-desc'>
-                        <h5 className='title'>Image Size</h5>
-                        <p>{image.size}</p>
-                    </div>
-                    <div className='image-desc'>
-                        <h5 className='title'>Image Dimensions</h5>
-                        <p>{image.dimensions}</p>
-                    </div>
-                    <div className='image-desc'>
-                        <h5 className='title'>Image Megapixels</h5>
-                        <p>{image.megapixel}</p>
-                    </div>
-
-                    <div className="preview-button-group">
-                        <a className='icon-btn' href={image.src} download={image.name}>
-                            <img src="/icons/download.svg" alt=""/>
-                        </a>
-                        <button className='icon-btn delete' onClick={handleDelete}>
-                            <img src="/icons/delete.svg" alt=""/>
-                        </button>
+            {imageInfo && <>
+                <div className="preview-left">
+                    <div className='preview-img-wrapper'>
+                        <img className='preview-img' src={src} alt={name}/>
+                        {fileId && <button className="placeholder" onClick={handleDownload}>
+                            <img src="icons/download-placeholder.svg" alt=""/>
+                        </button>}
                     </div>
                 </div>
-            </div>
+                <div className="preview-right">
+                    <div className='preview-data'>
+                        <div className='image-desc'>
+                            <h5 className='title'>Image Name</h5>
+                            <p className='truncate'>{name}</p>
+                        </div>
+                        <div className='image-desc'>
+                            <h5 className='title'>Image Type</h5>
+                            <p>{type}</p>
+                        </div>
+                        <div className='image-desc'>
+                            <h5 className='title'>Image Size</h5>
+                            <p>{size}</p>
+                        </div>
+                        <div className='image-desc'>
+                            <h5 className='title'>Image Dimensions</h5>
+                            <p>{dimensions}</p>
+                        </div>
+                        <div className='image-desc'>
+                            <h5 className='title'>Image Megapixels</h5>
+                            <p>{megapixel}</p>
+                        </div>
+
+                        <div className="preview-button-group">
+                            {fileId && <button className='icon-btn' onClick={handleDownload}>
+                                <img src="/icons/download.svg" alt="Download"/>
+                            </button>}
+                            <button className='icon-btn delete' onClick={onDelete}>
+                                <img src="/icons/delete.svg" alt=""/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </>
+            }
         </div>
+
     );
 };
 
