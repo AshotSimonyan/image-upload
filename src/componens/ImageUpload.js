@@ -50,7 +50,7 @@ const ImageUpload = ({setImage}) => {
                     onChange={handleImageUpload}
                 />
                 <div className='upload-animated'>
-                    <img className='upload-img' src="icons/placeholder.png" alt="upload image"/>
+                    <img className='upload-img' src="icons/placeholder.png" alt="upload"/>
                     <span className='text-white-600'>Only .png and .jpg (.jpeg) are supported</span>
                 </div>
 
