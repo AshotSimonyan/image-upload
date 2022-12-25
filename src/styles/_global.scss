@@ -1,0 +1,23 @@
+h1 {
+    font-size: 32px;
+    text-align: center;
+    padding-top: 100px;
+    padding-bottom: 30px;
+    font-weight: 500;
+}
+
+.truncate {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.error-message {
+    font-size: 14px;
+    color: $color-danger;
+}
+
+.text-white-600 {
+    color: $color-white-600;
+}
