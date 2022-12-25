@@ -17,6 +17,17 @@ const ImageUpload = ({setImage}) => {
         const [file] = e.target.files;
         if (file) {
             validateFile(file)
+            const formData = new FormData()
+            formData.append('image', file)
+
+            const res = fetch('https://upload.uploadcare.com/base/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryQsb8fVMEU0zxzMSB'
+                },
+                body: formData,
+            })
+            console.log(res)
             const reader = new FileReader();
             reader.onload = e => {
                 const {result} = e.target
@@ -50,7 +61,7 @@ const ImageUpload = ({setImage}) => {
                     onChange={handleImageUpload}
                 />
                 <div className='upload-animated'>
-                    <img className='upload-img' src="icons/placeholder.png" alt="upload image"/>
+                    <img className='upload-img' src="icons/placeholder.png" alt="upload"/>
                     <span className='text-white-600'>Only .png and .jpg (.jpeg) are supported</span>
                 </div>
 
